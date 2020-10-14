@@ -3,7 +3,7 @@ import $ from 'jquery';
 
 import '../stylesheets/QuizView.css';
 
-const questionsPerPlay = 5; 
+//const questionsPerPlay = 5; 
 
 class QuizView extends Component {
   constructor(props){
@@ -16,6 +16,9 @@ class QuizView extends Component {
         numCorrect: 0,
         currentQuestion: {},
         guess: '',
+        totalQuestions:0,
+        questionsPerPlay:5,
+        showResults:false,
         forceEnd: false
     }
   }
@@ -66,6 +69,8 @@ class QuizView extends Component {
           previousQuestions: previousQuestions,
           currentQuestion: result.question,
           guess: '',
+          totalQuestions:result.total_questions,
+          questionsPerPlay:result.total_questions>5?5:result.total_questions,
           forceEnd: result.question ? false : true
         })
         return;
@@ -95,6 +100,7 @@ class QuizView extends Component {
       numCorrect: 0,
       currentQuestion: {},
       guess: '',
+      showResults:false,
       forceEnd: false
     })
   }
@@ -144,13 +150,21 @@ class QuizView extends Component {
         <div className="quiz-question">{this.state.currentQuestion.question}</div>
         <div className={`${evaluate ? 'correct' : 'wrong'}`}>{evaluate ? "You were correct!" : "You were incorrect"}</div>
         <div className="quiz-answer">{this.state.currentQuestion.answer}</div>
-        <div className="next-question button" onClick={this.getNextQuestion}> Next Question </div>
+        {this.state.previousQuestions.length+1===this.state.questionsPerPlay? <div className="next-question button" onClick={this.toggleResults}> Next </div>:
+        <div className="next-question button" onClick={this.getNextQuestion}> Next Question </div>}
       </div>
     )
   }
 
+  toggleResults=()=>{
+    this.setState({showResults:!this.state.showResults});
+  }
+
   renderPlay(){
-    return this.state.previousQuestions.length === questionsPerPlay || this.state.forceEnd
+    console.log(this.state.previousQuestions.length)
+    console.log('questions per play')
+    console.log(this.state.questionsPerPlay)
+    return this.state.previousQuestions.length === this.state.questionsPerPlay || this.state.forceEnd||this.state.showResults
       ? this.renderFinalScore()
       : this.state.showAnswer 
         ? this.renderCorrectAnswer()

@@ -50,7 +50,9 @@ class FormView extends Component {
       crossDomain: true,
       success: (result) => {
         document.getElementById("add-question-form").reset();
-        return;
+        alert('Question was Successfully Added !')
+        window.location.href='/';
+        //return;
       },
       error: (error) => {
         alert('Unable to add question. Please try your request again')
@@ -67,14 +69,14 @@ class FormView extends Component {
     return (
       <div id="add-form">
         <h2>Add a New Trivia Question</h2>
-        <form className="form-view" id="add-question-form" onSubmit={this.submitQuestion}>
+        <form className="form-view" id="add-question-form" onSubmit={this.submitQuestion} >
           <label>
             Question
-            <input type="text" name="question" onChange={this.handleChange}/>
+            <input type="text" name="question" onChange={this.handleChange} required/>
           </label>
           <label>
             Answer
-            <input type="text" name="answer" onChange={this.handleChange}/>
+            <input type="text" name="answer" onChange={this.handleChange} required/>
           </label>
           <label>
             Difficulty

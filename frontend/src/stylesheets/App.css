@@ -31,6 +31,16 @@ ul {
   padding-inline-start: 0px;
 }
 
+h2:hover,
+h1:hover,
+li:hover,
+.button:hover,
+.page-num:hover,
+.delete:hover,
+.play-category:hover {
+  cursor: pointer;
+}
+
 form {
   display: flex;
   flex-direction: column;
