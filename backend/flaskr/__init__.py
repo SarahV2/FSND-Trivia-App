@@ -40,12 +40,15 @@ def create_app(test_config=None):
     # GET all categories
     @app.route("/categories", methods=["GET"])
     def get_categories():
-        categories = Category.query.all()
-        avaliable_categories = {}
-        for category in categories:
-            avaliable_categories[category.id] = category.type
+        try:
+            categories = Category.query.all()
+            avaliable_categories = {}
+            for category in categories:
+                avaliable_categories[category.id] = category.type
 
-        return jsonify({"categories": avaliable_categories})
+            return jsonify({"categories": avaliable_categories})
+        except:
+            abort(500)
 
     # ------------------------------------------------------------------------------------
 
@@ -197,9 +200,8 @@ def create_app(test_config=None):
                 questions = Question.query.filter(
                     Question.category == quiz_category["id"]
                 ).all()
-
-            # selected_questions = [question.format() for question in questions]
-
+            # only keep questions that are not included in the previously asked questions' list
+            # (filter the questions list by question id)
             filtered_questions = [
                 question
                 for question in questions
@@ -208,15 +210,7 @@ def create_app(test_config=None):
 
             # select a random question
             selected_question = random.choice(filtered_questions)
-            # if len(previous_questions) > 0:
-            #     while (selected_question.id) in previous_questions:
-            #         # print(selected_question)
-            #         selected_question = random.choice(selected_questions)
-            #         if (selected_question.id) not in previous_questions:
-            #             break
-            # if (selected_question.id) in previous_questions:
-            # selected_question = random.choice(selected_questions)
-            # print('exists')
+
             return jsonify(
                 {
                     "success": True,
@@ -227,17 +221,44 @@ def create_app(test_config=None):
         except:
             abort(500)
 
-    """
-  @TODO: 
-  Create a POST endpoint to get questions to play the quiz. 
-  This endpoint should take category and previous question parameters 
-  and return a random questions within the given category, 
-  if provided, and that is not one of the previous questions. 
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": 404,
+                    "message": "the requested resource was not found",
+                }
+            ),
+            404,
+        )
 
-  TEST: In the "Play" tab, after a user selects "All" or a category,
-  one question at a time is displayed, the user is allowed to answer
-  and shown whether they were correct or not. 
-  """
+    @app.errorhandler(500)
+    def server_error(error):
+        return (
+            jsonify(
+                {"success": False, "error": 500, "message": "internal server error",}
+            ),
+            500,
+        )
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return (
+            jsonify({"success": False, "error": 400, "message": "bad request",}),
+            400,
+        )
+
+    @app.errorhandler(422)
+    def unprocessable_entity(error):
+        return (
+            jsonify(
+                {"success": False, "error": 422, "message": "unprocessable entity",}
+            ),
+            422,
+        )
 
     """
   @TODO: 
