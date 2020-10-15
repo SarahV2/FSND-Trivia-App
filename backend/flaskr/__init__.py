@@ -40,13 +40,15 @@ def create_app(test_config=None):
     # GET all categories
     @app.route("/categories", methods=["GET"])
     def get_categories():
+        if request.method == "POST":
+            abort(405)
         try:
             categories = Category.query.all()
             avaliable_categories = {}
             for category in categories:
                 avaliable_categories[category.id] = category.type
 
-            return jsonify({"categories": avaliable_categories})
+            return jsonify({"success": True, "categories": avaliable_categories})
         except:
             abort(500)
 
@@ -87,6 +89,15 @@ def create_app(test_config=None):
         new_answer = body.get("answer", None)
         new_category = body.get("category", None)
         new_difficulty = body.get("difficulty", None)
+
+        if (
+            new_question is None
+            or new_answer is None
+            or new_category is None
+            or new_difficulty is None
+        ):
+            abort(400)
+
         newQuestion = Question(
             question=new_question,
             answer=new_answer,
@@ -102,10 +113,11 @@ def create_app(test_config=None):
     # DELETE a question
     @app.route("/questions/<int:question_id>", methods=["DELETE"])
     def delete_Question(question_id):
-        try:
-            question = Question.query.filter(Question.id == question_id).one_or_none()
-            if question is None:
-                abort(404)
+        question = Question.query.filter(Question.id == question_id).one_or_none()
+        if question is None:
+         abort(404)
+         
+        try: 
             question.delete()
             selection = Question.query.all()
             current_questions = paginate_questions(request, selection)
@@ -113,6 +125,7 @@ def create_app(test_config=None):
                 {
                     "success": True,
                     "questions": current_questions,
+                    "deleted_q_id":question_id,
                     "total_questions": len(Question.query.all()),
                 }
             )
@@ -258,6 +271,13 @@ def create_app(test_config=None):
                 {"success": False, "error": 422, "message": "unprocessable entity",}
             ),
             422,
+        )
+
+    @app.errorhandler(405)
+    def method_not_allowed(error):
+        return (
+            jsonify({"success": False, "error": 405, "message": "method not allowed",}),
+            405,
         )
 
     """
