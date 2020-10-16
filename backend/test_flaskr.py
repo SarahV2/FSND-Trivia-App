@@ -45,10 +45,8 @@ class TriviaTestCase(unittest.TestCase):
         """Executed after reach test"""
         pass
 
-    """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
-    """
+    # --------------------------------------------------------------------------------------
+
     # GET /questions
     def test_get_questions(self):
         res = self.client().get("/questions")

@@ -124,7 +124,6 @@ def create_app(test_config=None):
             return jsonify(
                 {
                     "success": True,
-                    "questions": current_questions,
                     "deleted_q_id":question_id,
                     "total_questions": len(Question.query.all()),
                 }
@@ -158,7 +157,6 @@ def create_app(test_config=None):
                     "success": True,
                     "questions": questions_list,
                     "total_questions": len(questions_list),
-                    "current_category": avaliable_categories,
                 }
             )
         else:
@@ -215,11 +213,15 @@ def create_app(test_config=None):
                 ).all()
             # only keep questions that are not included in the previously asked questions' list
             # (filter the questions list by question id)
+
             filtered_questions = [
                 question
                 for question in questions
                 if question.id not in previous_questions
             ]
+            
+            if len(filtered_questions)==0:
+                return jsonify({"message":"Sorry, no more questions avaliable"})
 
             # select a random question
             selected_question = random.choice(filtered_questions)
