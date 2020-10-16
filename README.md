@@ -60,6 +60,7 @@ The API will return 5 error types:
 ``` curl http://127.0.0.1:5000/categories ```
 
 ```
+{
   "categories": {
     "1": "Science",
     "2": "Art",
@@ -75,9 +76,10 @@ The API will return 5 error types:
 #### GET /questions
 * General: Returns a list of question objects, success value, a list of categories objects and the total number of questions
 * Sample:
-curl http://127.0.0.1:5000/questions
+``` curl http://127.0.0.1:5000/questions ```
 
 ```
+{
 "categories": {
     "1": "Science",
     "2": "Art",
@@ -168,30 +170,52 @@ curl http://127.0.0.1:5000/questions
 * Sample:
 ```curl http://127.0.0.1:5000/questions -X POST -H "Content-Type:application/json" -d '{"question":"What are the cutest felines on earth?", "answer":"Cats","category":1,"difficulty":2}' ```
 ```
+{
   "question": {
     "answer": "Cats",
     "category": 1,
     "difficulty": 2,
-    "id": 52,
+    "id": 54,
     "question": "What are the cutest felines on earth?"
   },
   "success": true
 }
 ```
 ### DELETE /questions/question_id
-* General: Deletes a question given its id and returns a success value, deleted question id, current list of question objects and the total number of questions
+* General: Deletes a question given its id and returns a success value, deleted question id, and the total number of questions
 
 * Sample:
-```curl http://127.0.0.1:5000/questions/52 -X DELETE```
+```curl http://127.0.0.1:5000/questions/54 -X DELETE```
+```
+{
+  "deleted_q_id": 54,
+  "success": true,
+  "total_questions": 27
+}
 
-
+```
 
 ### POST /questions/search
 * General: Search for questions containing a substring passed as ```searchTerm``` in the body, and returns a success value, a list of question objects that has the input search value and the total number of questions in the search results
 
-
 * Sample:
 ```curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type:application/json" -d '{"searchTerm":"Taj Mahal"}' ``` 
+
+```
+{
+  "questions": [
+    {
+      "answer": "Agra",
+      "category": 3,
+      "difficulty": 2,
+      "id": 15,
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ],
+  "success": true,
+  "total_questions": 1
+}
+```
 
 ### GET /categories/category_id/questions
 * General: Get a list of questions of a specific category by using the categpry's id, it returns  deleted question id, current list of question objects and the total number of questions
@@ -201,6 +225,7 @@ curl http://127.0.0.1:5000/questions
 ```curl http://127.0.0.1:5000/categories/5/questions ``` 
 
 ```
+{
   "questions": [
     {
       "answer": "Apollo 13",
@@ -240,6 +265,7 @@ curl http://127.0.0.1:5000/questions
 ``` curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [2,6], "quiz_category": {"type": "Entertainment", "id": "5"}}' ```
 
 ```
+{
   "question": {
     "answer": "Tom Cruise",
     "category": 5,
