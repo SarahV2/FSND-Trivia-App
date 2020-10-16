@@ -48,8 +48,9 @@ def create_app(test_config=None):
             for category in categories:
                 avaliable_categories[category.id] = category.type
 
-            return jsonify({"success": True, "categories": avaliable_categories})
-        except:
+            return jsonify(
+                {"success": True, "categories": avaliable_categories})
+        except BaseException:
             abort(500)
 
     # ------------------------------------------------------------------------------------
@@ -91,10 +92,10 @@ def create_app(test_config=None):
         new_difficulty = body.get("difficulty", None)
 
         if (
-            new_question is None
-            or new_answer is None
-            or new_category is None
-            or new_difficulty is None
+            new_question is None or
+            new_answer is None or
+            new_category is None or
+            new_difficulty is None
         ):
             abort(400)
 
@@ -113,22 +114,23 @@ def create_app(test_config=None):
     # DELETE a question
     @app.route("/questions/<int:question_id>", methods=["DELETE"])
     def delete_Question(question_id):
-        question = Question.query.filter(Question.id == question_id).one_or_none()
+        question = Question.query.filter(
+            Question.id == question_id).one_or_none()
         if question is None:
-         abort(404)
-         
-        try: 
+            abort(404)
+
+        try:
             question.delete()
             selection = Question.query.all()
             current_questions = paginate_questions(request, selection)
             return jsonify(
                 {
                     "success": True,
-                    "deleted_q_id":question_id,
+                    "deleted_q_id": question_id,
                     "total_questions": len(Question.query.all()),
                 }
             )
-        except:
+        except BaseException:
             abort(422)
 
     # ------------------------------------------------------------------------------------
@@ -168,7 +170,8 @@ def create_app(test_config=None):
     @app.route("/categories/<int:category_id>/questions", methods=["GET"])
     def get_questions_by_category(category_id):
         all_categories = Category.query.all()
-        formatted_categories = [category.format() for category in all_categories]
+        formatted_categories = [category.format()
+                                for category in all_categories]
         list_of_ids = []
         for category in formatted_categories:
             list_of_ids.append(category["id"])
@@ -176,7 +179,8 @@ def create_app(test_config=None):
         # check if the id exists within the list of categories ids
         if category_id in list_of_ids:
             try:
-                questions = Question.query.filter(Question.category == category_id)
+                questions = Question.query.filter(
+                    Question.category == category_id)
                 questions_list = [question.format() for question in questions]
                 if len(questions_list) == 0:
                     abort(404)
@@ -187,7 +191,7 @@ def create_app(test_config=None):
                         "total_questions": len(questions_list),
                     }
                 )
-            except:
+            except BaseException:
                 abort(500)
         else:
             abort(404)
@@ -199,7 +203,8 @@ def create_app(test_config=None):
         previous_questions = body.get("previous_questions", None)
         quiz_category = body.get("quiz_category", None)
 
-        # if no category or list provided within the request, abort with code status 422 bad request
+        # if no category or list provided within the request, abort with code
+        # status 422 bad request
         if quiz_category is None or previous_questions is None:
             abort(400)
 
@@ -211,7 +216,8 @@ def create_app(test_config=None):
                 questions = Question.query.filter(
                     Question.category == quiz_category["id"]
                 ).all()
-            # only keep questions that are not included in the previously asked questions' list
+            # only keep questions that are not included in
+            # the previously asked questions' list
             # (filter the questions list by question id)
 
             filtered_questions = [
@@ -219,9 +225,10 @@ def create_app(test_config=None):
                 for question in questions
                 if question.id not in previous_questions
             ]
-            
-            if len(filtered_questions)==0:
-                return jsonify({"message":"Sorry, no more questions avaliable"})
+
+            if len(filtered_questions) == 0:
+                return jsonify(
+                    {"message": "Sorry, no more questions avaliable"})
 
             # select a random question
             selected_question = random.choice(filtered_questions)
@@ -233,7 +240,7 @@ def create_app(test_config=None):
                     "total_questions": len(questions),
                 }
             )
-        except:
+        except BaseException:
             abort(500)
 
     # Error handlers
@@ -254,7 +261,9 @@ def create_app(test_config=None):
     def server_error(error):
         return (
             jsonify(
-                {"success": False, "error": 500, "message": "internal server error",}
+                {"success": False,
+                 "error": 500,
+                    "message": "internal server error", }
             ),
             500,
         )
@@ -262,7 +271,9 @@ def create_app(test_config=None):
     @app.errorhandler(400)
     def bad_request(error):
         return (
-            jsonify({"success": False, "error": 400, "message": "bad request",}),
+            jsonify({"success": False,
+                     "error": 400,
+                     "message": "bad request", }),
             400,
         )
 
@@ -270,22 +281,22 @@ def create_app(test_config=None):
     def unprocessable_entity(error):
         return (
             jsonify(
-                {"success": False, "error": 422, "message": "unprocessable entity",}
+                {"success": False,
+                 "error": 422,
+                 "message": "unprocessable entity", }
             ),
             422,
         )
 
     @app.errorhandler(405)
     def method_not_allowed(error):
-        return (
-            jsonify({"success": False, "error": 405, "message": "method not allowed",}),
-            405,
-        )
+        return (jsonify({"success": False, "error": 405,
+                         "message": "method not allowed", }), 405, )
 
     """
-  @TODO: 
-  Create error handlers for all expected errors 
-  including 404 and 422. 
+  @TODO:
+  Create error handlers for all expected errors
+  including 404 and 422.
   """
 
     return app
