@@ -5,6 +5,10 @@
 Trivia is a full stack web application that allows users to test their knowlege by playing quizzes of questions of various categories, as well as allowing them to control the content of these quizzes by adding and removing questions.
 
 ## Installation
+### Prerequisites
+You'll need to have Flask and PostgreSQL installed on your machine prior proceesing with the rest of the installation process for this project.
+* To install Flask run the command: ```pip3 install flask```
+* Download and install <a href="https://www.postgresql.org/download/">PostgreSQL</a>
 
 ### Database Setup
 In order to setup the database, we'll use the ```trivia.psql``` file provided within the backend directory files to set up our database named <b>trivia</b>:<br>
