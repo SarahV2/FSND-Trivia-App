@@ -6,21 +6,21 @@ Trivia is a full stack web application that allows users to test their knowlege 
 
 ## Installation
 
-### Database Setup
+* Database Setup
 In order to setup the database, we'll use the ```trivia.psql``` file provided within the backend directory files to set up our database named <b>trivia</b>:<br>
 ```
 createdb trivia
 psql -U postgres -f trivia.psql trivia
 ```
 
-### Backend
+* Backend
 To get started navigate to the backend directory by running the command ```cd backend``` and then:
 1. Install dependencies ```pip install -r requirements.txt```
 2. Set up the app ```export FLASK_APP=flaskr```
 3. Set up the development environment ```export FLASK_ENV=development```
-4. Start the server by typing ```flask run```
+4. Start the backend server by typing ```flask run```
 
-### Frontend
+* Frontend
 In another terminal, navigate to the frontend directory ```cd frontend``` followed by ```npm install``` or ```npm i``` to install the dependecies and finally start the server by using the command ```npm start```
 
 ## Features
