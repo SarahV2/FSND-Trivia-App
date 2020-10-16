@@ -164,7 +164,7 @@ curl http://127.0.0.1:5000/questions
 ```
 
 #### POST /questions
-* General: Returns the newly created question along with a success value
+* General: Adds a new question and returns the newly created question along with a success value
 * Sample:
 ```curl http://127.0.0.1:5000/questions -X POST -H "Content-Type:application/json" -d '{"question":"What are the cutest felines on earth?", "answer":"Cats","category":1,"difficulty":2}' ```
 ```
@@ -178,7 +178,80 @@ curl http://127.0.0.1:5000/questions
   "success": true
 }
 ```
+### DELETE /questions/question_id
+* General: Deletes a question given its id and returns a success value, deleted question id, current list of question objects and the total number of questions
 
+* Sample:
+```curl http://127.0.0.1:5000/questions/52 -X DELETE```
+
+
+
+### POST /questions/search
+* General: Search for questions containing a substring passed as ```searchTerm``` in the body, and returns a success value, a list of question objects that has the input search value and the total number of questions in the search results
+
+
+* Sample:
+```curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type:application/json" -d '{"searchTerm":"Taj Mahal"}' ``` 
+
+### GET /categories/category_id/questions
+* General: Get a list of questions of a specific category by using the categpry's id, it returns  deleted question id, current list of question objects and the total number of questions
+
+
+* Sample:
+```curl http://127.0.0.1:5000/categories/5/questions ``` 
+
+```
+  "questions": [
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+    {
+      "answer": "Tom Cruise",
+      "category": 5,
+      "difficulty": 4,
+      "id": 4,
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }
+  ],
+  "success": true,
+  "total_questions": 3
+}
+```
+### POST /quizzes
+* General: Get a random question from a specific category, or a random question from any category based on:
+   <ul>
+      <li> If the value passed as the quiz category id is 0: the API returns a random question from any category </li>
+      <li>otherwise, the API returns a random question from a specific category as specified in the request body</li>
+      </ul>
+     along with that, a success value and the total number of questions are returned as well
+
+* Sample:
+``` curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [2,6], "quiz_category": {"type": "Entertainment", "id": "5"}}' ```
+
+```
+  "question": {
+    "answer": "Tom Cruise",
+    "category": 5,
+    "difficulty": 4,
+    "id": 4,
+    "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+  },
+  "success": true,
+  "total_questions": 3
+}
+
+```
 ## Testing
 To run the tests, run the following commands:
 ```
