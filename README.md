@@ -57,7 +57,7 @@ The API will return 5 error types:
 #### GET /categories
 * General: Returns a list of category objects and a success value
 * Sample:
-curl http://127.0.0.1:5000/categories
+``` curl http://127.0.0.1:5000/categories ```
 
 ```
   "categories": {
