@@ -124,6 +124,7 @@ def create_app(test_config=None):
             return jsonify(
                 {
                     "success": True,
+                    "questions": current_questions,
                     "deleted_q_id":question_id,
                     "total_questions": len(Question.query.all()),
                 }

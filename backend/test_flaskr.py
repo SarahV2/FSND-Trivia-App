@@ -108,14 +108,14 @@ class TriviaTestCase(unittest.TestCase):
 
     # DELETE /questions/<id:question_id>
     def test_delete_question(self):
-        res = self.client().delete("/questions/15")
+        question_id = 16
+        res = self.client().delete("/questions/{}".format(question_id))
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
-        self.assertEqual(data["deleted_q_id"], 15)
+        self.assertEqual(data["deleted_q_id"], question_id)
         self.assertTrue(data["total_questions"])
-        self.assertTrue(len(data["questions"]))
 
     def test_delete_question_404_error(self):
         res = self.client().delete("/questions/110110")
@@ -138,7 +138,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue(data["total_questions"])
         self.assertTrue(len(data["questions"]))
-        self.assertTrue(len(data["current_category"]))
 
     def test_search_400_error(self):
         res = self.client().post("/questions/search", json={"searchTerm": ""})
